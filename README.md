@@ -85,8 +85,14 @@ DataPulse was built by a team at the **CEWIT 2024** hackathon. The code here is 
 submission, tidied up for readability and documentation. Each half has its own README with
 architecture notes, the data pipeline, and API examples.
 
-<!-- TODO: replace with your actual contributions -->
-**My contributions:** _describe the parts you built here._
+**My contributions:** I designed and built the **frontend** — the entire DataPulse dashboard
+as a React single-page app. This included:
+
+- the multi-page layout and client-side routing (React Router) across the RFM, sales-forecast, and product-recommendation views;
+- integrating the backend's analytics responses into interactive **Plotly** charts rendered dynamically on the page;
+- data-driven UI controls, including cascading category → sub-category → product selectors that let a user drill into the recommendation engine;
+- a conversational **AI chat assistant** with live message state; and
+- UX polish such as a light/dark mode toggle and responsive styling.
 
 ## License
 
