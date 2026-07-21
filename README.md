@@ -81,6 +81,13 @@ The frontend defaults to a backend at `http://localhost:5000`; override it with
 
 ## About
 
-DataPulse was built as a hackathon project (CEWIT 2024). The code here is the original
+DataPulse was built by a team at the **CEWIT 2024** hackathon. The code here is the original
 submission, tidied up for readability and documentation. Each half has its own README with
 architecture notes, the data pipeline, and API examples.
+
+<!-- TODO: replace with your actual contributions -->
+**My contributions:** _describe the parts you built here._
+
+## License
+
+Released under the [MIT License](LICENSE).
