@@ -1,170 +1,86 @@
-# DataPulse — Analytics Backend
+# DataPulse
 
-A Flask-based analytics API that turns raw retail sales data into actionable insight.
-Built for **CEWIT 2024** on the classic [Superstore](https://www.kaggle.com/datasets/vivek468/superstore-dataset-final) dataset (~10k orders), it exposes four machine-learning services behind a small REST interface, with Redis caching in front of every expensive computation.
+**A retail analytics platform that turns raw sales data into decisions.**
+Built for the **CEWIT 2024** hackathon on the classic [Superstore](https://www.kaggle.com/datasets/vivek468/superstore-dataset-final) dataset (~10k orders), DataPulse pairs a machine-learning backend with an interactive dashboard to answer four questions a retailer actually cares about:
 
-> This repository is the **backend**. It serves JSON (mostly [Plotly](https://plotly.com/python/) figure specs) that a companion frontend renders as interactive charts.
+- **Who are my customers?** — RFM segmentation groups them into behavioural tiers.
+- **What will I sell next?** — time-series forecasting projects future sales.
+- **What else might a shopper want?** — product-similarity recommendations.
+- **Can I just ask?** — a built-in conversational assistant.
+
+This is a **monorepo** containing both halves of the project.
+
+```
+DataPulse/
+├── backend/    ← Flask + ML API (scikit-learn, Prophet, GloVe, Gemma)
+└── frontend/   ← React dashboard (Plotly charts, light/dark mode)
+```
+
+---
+
+## How it fits together
+
+```
+   ┌──────────────────────────┐        HTTP / JSON        ┌──────────────────────────┐
+   │  frontend/  (React)       │  ───────────────────────▶ │  backend/  (Flask)        │
+   │  · dashboard & routing    │   /create_rfm             │  · ML services            │
+   │  · renders Plotly figures │   /predict_sales          │  · Redis read-through     │
+   │  · AI chat popup          │   /similar_products       │    cache                  │
+   │                           │ ◀───────────────────────  │  · Superstore dataset     │
+   └──────────────────────────┘   Plotly figure JSON       └──────────────────────────┘
+```
+
+The backend does the computation and returns [Plotly](https://plotly.com/) figure specs; the frontend renders them as interactive charts. Every expensive result is cached in Redis for a week.
 
 ---
 
 ## Features
 
-| Endpoint | What it does | Under the hood |
-|---|---|---|
-| `POST /create_rfm` | **Customer / segment clustering.** Computes Recency–Frequency–Monetary metrics for a chosen dimension and groups them into behavioural tiers (Diamond → Iron). | `KMeans` with automatic *k* selection via the elbow method (`kneed`) |
-| `POST /predict_sales` | **Sales forecasting.** Projects future sales for the next *N* days, optionally filtered by category and/or state. | Facebook `Prophet` time-series model |
-| `POST /similar_products` | **Product recommendations.** Returns products most similar to a given one, as a Plotly network graph. | GloVe word embeddings + cosine similarity, laid out with `networkx` |
-| `POST /generate_text` | **Conversational text generation.** A lightweight assistant response for a given prompt. | Google `gemma-2b`, 4-bit quantized (`bitsandbytes`) |
-| `GET /` | Health check. | — |
-
-Every response is cached in Redis for 7 days, keyed by the request parameters, so repeated queries are served instantly.
+| Feature | Frontend page | Backend endpoint | Under the hood |
+|---|---|---|---|
+| **Customer segmentation** | `/` (RFM analysis) | `POST /create_rfm` | KMeans with automatic *k* (elbow method) |
+| **Sales forecasting** | `/sales_forcast` | `POST /predict_sales` | Facebook Prophet |
+| **Product recommendations** | `/similar_product_prediction` | `POST /similar_products` | GloVe embeddings + cosine similarity → network graph |
+| **Conversational assistant** | Chat popup | `POST /generate_text` | Google Gemma-2b (4-bit quantized) |
 
 ---
 
-## Architecture
+## Quick start
 
-```
-                        ┌──────────────────────────────┐
-   HTTP / JSON  ─────▶  │  run.py  (Flask + CORS)       │
-                        │  · routing                    │
-                        │  · Redis read-through cache   │
-                        └───────────────┬──────────────┘
-                                        │
-                ┌───────────────────────┼───────────────────────┐
-                ▼                       ▼                       ▼
-        analytics/k_means.py   analytics/timeseries.py   analytics/similar_
-        (RFM + clustering)     (Prophet forecasting)     product_prediction.py
-                                                         + analytics/gemma.py
-                                        │
-                                        ▼
-                            dataset/*.csv  (pre-built)
-```
+You'll run the two halves in separate terminals. Full details live in each folder's README.
 
-- **`run.py`** — the Flask app: routes, JSON serialization, and the Redis cache layer.
-- **`serve.py`** — production entrypoint that boots `gunicorn` (gevent workers) reading config from env vars.
-- **`analytics/`** — one module per ML feature. These run at request time against the pre-built CSVs in `dataset/`.
-- **`utils/`** — the **offline data pipeline** that builds those CSVs from the raw `storesales.csv` and GloVe embeddings (see below). You only need these to regenerate the datasets.
-- **`constants.py`** — the tier label map used to name customer segments.
-
----
-
-## Data pipeline (`utils/`)
-
-The files in `dataset/` are already generated, so the API runs out of the box. The `utils/` scripts document (and reproduce) how they were built:
-
-| Script | Produces |
-|---|---|
-| `wordnet.py` | Embeds product text with GloVe and computes each product's top-similar SKUs → `products.csv` |
-| `products.py` | Alternate similarity build using `gensim` cosine similarity |
-| `clean_products.py` | Trims embedding columns → `clean_products.csv` |
-| `clean_sales.py` | Drops unused columns from raw sales → `clean_sales.csv` |
-| `preprocess_sales.py` | Encodes categoricals & engineers RFM features → `prod.csv` |
-| `geo_data.py` → `geo_json_to_csv.py` | Aggregates sales by state/city/date/category → `geo_data.json` → `geo_data.csv` |
-| `similar_products.py` | Groups SKUs by category/sub-category → `similar_product_data.json` |
-
-> Regenerating similarity data requires the GloVe vectors (`glove.6B.100d.txt`), which are **not** committed (`.gitignore`d). Download them from [Stanford NLP](https://nlp.stanford.edu/projects/glove/) into `dataset/`.
-
----
-
-## Getting started
-
-### Prerequisites
-- Python 3.10+
-- A Redis instance (local or hosted)
-- *(Optional)* an NVIDIA GPU with CUDA for the `/generate_text` Gemma endpoint
-
-### Setup
+**1. Backend** ([backend/README.md](backend/README.md))
 
 ```bash
-# 1. Clone
-git clone https://github.com/jlinnnn/DataPulse-Backend.git
-cd DataPulse-Backend
-
-# 2. Virtual environment
-python3 -m venv venv
-source venv/bin/activate
-
-# 3. Dependencies
+cd backend
+python3 -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
-
-# 4. Configuration
-cp .env.example .env      # then edit with your Redis credentials
-```
-
-The app reads `REDIS_HOST`, `REDIS_PORT`, and `REDIS_PASSWORD` from the environment
-(defaults: `localhost:6379`, no password).
-
-### Run
-
-```bash
-# Development
+cp .env.example .env          # add your Redis credentials
 python run.py                 # http://localhost:5000
-
-# Production (gunicorn via the service shell)
-python serve.py
 ```
 
----
-
-## API examples
+**2. Frontend** ([frontend/README.md](frontend/README.md))
 
 ```bash
-# Cluster customers by their RFM behaviour
-curl -X POST http://localhost:5000/create_rfm \
-  -H "Content-Type: application/json" \
-  -d '{"option": "customer_id"}'
-# option ∈ {customer_id, state, city, segment, ship_mode, category, sub_category}
-
-# Forecast the next 90 days of Furniture sales in California
-curl -X POST http://localhost:5000/predict_sales \
-  -H "Content-Type: application/json" \
-  -d '{"period": 90, "category": "Furniture", "state": "California"}'
-
-# Find products similar to a given one
-curl -X POST http://localhost:5000/similar_products \
-  -H "Content-Type: application/json" \
-  -d '{"product": "Xerox 1967"}'
-
-# Generate a short assistant reply
-curl -X POST http://localhost:5000/generate_text \
-  -H "Content-Type: application/json" \
-  -d '{"text": "Summarize why customer retention matters."}'
+cd frontend
+npm install
+npm start                     # http://localhost:3000
 ```
 
-Responses for the first three endpoints are Plotly figure JSON, ready to hand to `Plotly.newPlot` on the frontend.
+The frontend defaults to a backend at `http://localhost:5000`; override it with
+`REACT_APP_API_URL` (see `frontend/.env.example`).
 
 ---
 
 ## Tech stack
 
-**Web** — Flask · Flask-CORS · gunicorn / gevent · waitress
-**ML / Data** — scikit-learn · Prophet · gensim (GloVe) · Transformers + bitsandbytes (Gemma-2b) · pandas · NumPy · NetworkX · kneed
-**Viz** — Plotly
-**Cache** — Redis
+**Backend** — Flask · scikit-learn · Prophet · gensim (GloVe) · Transformers + bitsandbytes (Gemma-2b) · Redis · Plotly
+**Frontend** — React 18 · React Router · React-Bootstrap · Plotly.js · d3
 
 ---
 
-## Project layout
+## About
 
-```
-.
-├── run.py                 # Flask app + routes + Redis cache
-├── serve.py               # gunicorn production entrypoint
-├── constants.py           # segment tier labels
-├── requirements.txt
-├── analytics/             # request-time ML services
-│   ├── k_means.py         # RFM + KMeans clustering
-│   ├── timeseries.py      # Prophet forecasting
-│   ├── similar_product_prediction.py
-│   └── gemma.py           # Gemma-2b text generation
-├── utils/                 # offline data-prep pipeline
-├── scripts/               # deployment helpers (systemd + nginx)
-└── dataset/               # pre-built CSV/JSON inputs
-```
-
----
-
-## Notes
-
-- This began as a hackathon project; the `analytics/` and `utils/` folders are the original submission, tidied up here for readability.
-- `scripts/install_app.sh` / `run_server.sh` target an Ubuntu + systemd + nginx deployment and assume a fixed install path — treat them as a reference rather than a turnkey installer.
+DataPulse was built as a hackathon project (CEWIT 2024). The code here is the original
+submission, tidied up for readability and documentation. Each half has its own README with
+architecture notes, the data pipeline, and API examples.

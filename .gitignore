@@ -1,21 +1,4 @@
-# Datasets — large intermediate GloVe / word2vec files
-dataset/*.txt
-
-# Environments
-venv/
-.venv/
-env/
-
-# Secrets
-.env
-
-# Python
-*.pyc
-__pycache__/
-*.egg-info/
-.ipynb_checkpoints/
-
-# OS / editor
+# OS / editor cruft (backend/ and frontend/ have their own .gitignores)
 .DS_Store
 .vscode/
 .idea/

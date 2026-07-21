@@ -1,0 +1,127 @@
+/* Chat Popup Overall Styling */
+.chat-popup {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 320px; /* Adjusted width for better spacing */
+  border: 1px solid #ccc;
+  border-radius: 10px; /* Rounded corners for modern look */
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adjusted shadow for depth */
+  display: flex;
+  flex-direction: column; /* Organize content in a column */
+  overflow: hidden; /* Prevents overflow */
+  max-height: 70vh; /* Limit height based on viewport */
+  z-index: 100;
+}
+
+.chat-popup.open {
+  display: flex; /* Ensure it displays correctly when open */
+}
+
+/* Adjusted Chat Button to Toggle Popup */
+.chat-btn {
+  position: absolute;
+  top: -40px; /* Move button above the chat popup */
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%; /* Circle shape */
+  background-color: #f44336; /* Red color for distinction */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+}
+
+/* Container Inside the Popup for Chat Content */
+.chat-container {
+  flex-grow: 1; /* Allows container to grow */
+  overflow: hidden; /* Prevents overflow outside the border-radius */
+}
+
+/* Where Messages Will Appear */
+
+/* Styling for Messages */
+.message.user, .message.AI {
+  margin-bottom: 10px;
+  padding: 5px;
+  border-radius: 4px;
+  max-width: 80%; /* Prevents messages from being too wide */
+  word-wrap: break-word; /* Ensures text wraps inside the bubble */
+}
+
+.message.user {
+  align-self: flex-end;
+  background-color: #dcf8c6;
+}
+
+.message.AI {
+  align-self: flex-start;
+  background-color: #ebebeb;
+}
+
+/* Form for Sending Messages */
+.message-form {
+  display: flex;
+  border-top: 1px solid #ccc; /* Visual separation from messages */
+  padding: 10px;
+  background: #f9f9f9; /* Differentiates form from chat content */
+}
+
+.message-form input, .message-form button {
+  padding: 10px;
+  margin: 0 5px; /* Adjust spacing around input/button */
+}
+
+.message-form input {
+  flex-grow: 1; /* Allows input to fill space */
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.message-form button {
+  white-space: nowrap; /* Keeps button text on one line */
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.message-form button:hover {
+  background-color: #0056b3;
+}
+.chat-content {
+  flex-grow: 1;
+  padding: 10px;
+  overflow-y: auto; /* Allows vertical scrolling */
+  max-height: 300px; /* Example max-height, adjust based on your design */
+}
+
+.chat-toggle-btn {
+  position: fixed;
+  right: 20px;
+  top: 20px; /* Position the button 20px from the top */
+  bottom: auto;
+}
+
+.chat-prompts {
+  padding: 10px;
+}
+
+.prompt-btn {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 5px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  text-align: left;
+}
+
+.prompt-btn:hover {
+  background-color: #e0e0e0;
+}

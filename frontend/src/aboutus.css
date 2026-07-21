@@ -1,0 +1,279 @@
+/* App.css */
+
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.5s ease;
+  }
+  
+  /* Light and Dark mode variables */
+  :root {
+    --bg-color: #fff;
+    --text-color: #000;
+    --nav-bg-color: #f8f9fa;
+    --link-color: #007bff;
+    --link-hover-color: #0056b3;
+    --header-color: #333;
+  }
+  
+  [data-theme="dark"] {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --nav-bg-color: #333;
+    --link-color: #2196f3;
+    --link-hover-color: #90caf9;
+    --header-color: #eee;
+  }
+  
+  /* Navigation Bar */
+  nav {
+    display: flex;
+    justify-content: space-around;
+    padding: 1rem 0;
+    background-color: var(--nav-bg-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  nav a {
+    text-decoration: none;
+    color: var(--link-color);
+    transition: color 0.3s ease;
+  }
+  
+  nav a:hover {
+    color: var(--link-hover-color);
+  }
+  
+  /* Main Content */
+  main {
+    padding: 20px;
+  }
+  
+  h1 {
+    color: var(--header-color);
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  /* Dropdown and SplitButton */
+  .dropdown-container {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 2rem;
+  }
+  
+  /* Graph Container */
+  .graph-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .graph {
+    margin: 1rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: calc(50% - 2rem);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .graph h3 {
+    margin-bottom: 1rem;
+    color: var(--header-color);
+  }
+  
+  @media (max-width: 768px) {
+    .graph {
+        width: calc(100% - 2rem);
+    }
+  }
+  #scatterplot-container1 {
+    height: 350px;
+    width: 600px;
+    margin: auto; /* Center the plot container if desired */
+  }
+  
+  .dropdown {
+    margin-top: 10px;
+  }
+  
+  .dropdown select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    font-size: 16px;
+  }
+  
+  
+  .collapsible {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000; /* Ensure it's above other content */
+  }
+  
+  /* Dropdown Button */
+  .dropbtn {
+    background-color: #04AA6D;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+  }
+  /* Ensures dropdown menus are next to each other */
+  .dropdowns-container {
+    display: flex;
+    justify-content: start; /* Aligns items at the start of the container */
+    gap: 20px; /* Adds space between dropdown menus */
+  }
+  
+  
+  /* The container <div> - needed to position the dropdown content */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Dropdown Content (Hidden by Default) */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  /* Links inside the dropdown */
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  /* Change color of dropdown links on hover */
+  .dropdown-content a:hover {background-color: #ddd;}
+  
+  /* Show the dropdown menu on hover */
+  .dropdown:hover .dropdown-content {display: block;}
+  
+  /* Change the background color of the dropdown button when the dropdown content is shown */
+  .dropdown:hover .dropbtn {background-color: #3e8e41;}
+  
+  .dark-mode {
+    --bg-color: #121212; /* Dark background */
+    --text-color: #e0e0e0; /* Light text */
+    --nav-bg-color: #333; /* Darker nav background */
+    --link-color: #2196f3; /* Light blue links */
+    --link-hover-color: #90caf9; /* Lighter blue on hover */
+    --header-color: #eee; /* Light header text */
+  }
+  
+  body.dark-mode {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+  
+  nav.dark-mode, .dropdown-container.dark-mode, .graph-container.dark-mode {
+    background-color: var(--nav-bg-color);
+  }
+  
+  nav.dark-mode a {
+    color: var(--link-color);
+  }
+  
+  nav.dark-mode a:hover {
+    color: var(--link-hover-color);
+  }
+  
+  h1.dark-mode {
+    color: var(--header-color);
+  }
+  .about-us-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  .mission-statement, .benefits, .our-clients, .contact-info {
+    margin-bottom: 50px;
+  }
+  
+  h2 {
+    color: #0056b3; /* Adjust color to fit your theme */
+    margin-bottom: 20px;
+  }
+  
+  p {
+    line-height: 1.6;
+  }
+  
+  .benefits-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+  .benefit-item {
+    flex: 1 1 30%; /* Adjust based on your preference */
+    margin: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    border-radius: 8px; /* Rounded corners */
+    overflow: hidden; /* Ensures content fits within the borders */
+    background: #fff; /* Light background for the items */
+    padding: 20px;
+    text-align: center; /* Center the text for each benefit item */
+  }
+  
+  .benefit-item img {
+    max-width: 100%; /* Ensure images are responsive */
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
+  .client-logos img {
+    margin: 10px;
+    width: 150px; /* Adjust based on actual logo sizes */
+    height: auto;
+    opacity: 0.8; /* Tone down the logo brightness */
+    transition: opacity 0.3s ease; /* Smooth transition for hover effect */
+  }
+  
+  .client-logos img:hover {
+    opacity: 1; /* Full opacity on hover */
+  }
+  
+  .contact-info p {
+    margin: 10px 0;
+  }
+  
+  /* Enhancing the contact section for better visibility */
+  .contact-info {
+    background-color: #f8f9fa; /* Light background for the section */
+    padding: 20px;
+    border-radius: 8px; /* Consistency in design with rounded corners */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Consistent shadowing with benefit items */
+  }
+  
+  /* Responsive Design Adjustments */
+  @media (max-width: 768px) {
+    .benefits-container {
+      flex-direction: column;
+    }
+  
+    .benefit-item {
+      flex-basis: auto; /* Adjust for mobile layout */
+      margin: 20px 0; /* More vertical space on smaller screens */
+    }
+  }
