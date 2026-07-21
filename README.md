@@ -77,8 +77,8 @@ The files in `dataset/` are already generated, so the API runs out of the box. T
 
 ```bash
 # 1. Clone
-git clone https://github.com/jlinnnn/DataPulse-Backed.git
-cd DataPulse-Backed
+git clone https://github.com/jlinnnn/DataPulse-Backend.git
+cd DataPulse-Backend
 
 # 2. Virtual environment
 python3 -m venv venv
