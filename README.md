@@ -18,6 +18,18 @@ DataPulse/
 
 ---
 
+## Screenshots
+
+**Customer segmentation (RFM)** — KMeans clusters, colored by behavioural tier, over recency × frequency:
+
+![RFM segmentation](docs/screenshots/rfm-segmentation.png)
+
+| Sales forecasting (Prophet) | Product recommendations (network graph) |
+|---|---|
+| ![Sales forecast](docs/screenshots/sales-forecast.png) | ![Similar products](docs/screenshots/similar-products.png) |
+
+---
+
 ## How it fits together
 
 ```

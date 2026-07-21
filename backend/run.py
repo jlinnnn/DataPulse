@@ -6,7 +6,8 @@ import plotly.express as px
 from analytics.k_means import create_rfm, run_kmeans, dataset, segments
 from analytics.timeseries import predict_sales
 from analytics.similar_product_prediction import return_similar_products
-from analytics.gemma import generate_text_gemma
+# analytics.gemma is imported lazily inside /generate_text so the server can
+# start (and serve the other endpoints) without the heavy Transformers/GPU stack.
 from flask_cors import CORS
 import redis
 from waitress import serve
@@ -94,6 +95,7 @@ def generate_text():
         text = request.json.get('text', None)
         # if r.get(text):
         #     return r.get(text)
+        from analytics.gemma import generate_text_gemma  # loaded on first use
         response = generate_text_gemma(text)
         r.set(text, response, ex=60*60*24*7)
 
