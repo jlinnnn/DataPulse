@@ -1,0 +1,8 @@
+dataset/*.txt
+venv/
+
+# ignore all .pyc files
+
+*.pyc
+
+__pycache__/
